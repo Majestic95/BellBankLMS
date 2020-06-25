@@ -1,4 +1,4 @@
-# BellBankLMS
+# Bell Bank LMS
 Bell Bank Learning Management Software (first real app)
 
 This application, developed on Python and using several packages, like Tkinter and Pillow, will serve to better help training and teaching staff everywhere
