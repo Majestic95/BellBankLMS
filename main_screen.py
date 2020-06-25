@@ -8,11 +8,6 @@
 
 import tkinter as tk
 from tkinter import *
-from tkinter.filedialog import askopenfilename
-
-from PIL import *
-from PIL import Image
-from PIL import ImageTk
 
 
 ### Main Menu class
@@ -47,6 +42,7 @@ class main_menu:
 		self.frame = tk.Frame(self.master)
 		self.frame.pack()
 
+
 		### Buttons
 
 		TrainingButton = tk.Button(text="Training", foreground="blue", font="bold")
@@ -61,17 +57,6 @@ class main_menu:
 		TrainerButton = tk.Button(text="Management", foreground="blue", font="bold")
 		TrainerButton.place(bordermode=OUTSIDE, relx=0.038, rely=0.71, anchor=W)
 		TrainerButton.bind('<ButtonRelease-1>', training_menu)
-
-
-		### Bell Bank img logo
-
-		# IMAGE/LOGO PROCESSING #
-		BellLogo = Image.open('bell1.png')
-		BellLogo = BellLogo.resize((50, 50), Image.ANTIALIAS)
-
-		renderedLogo = ImageTk.PhotoImage(BellLogo)
-		LogoLabel = tk.Label(image=renderedLogo)
-		LogoLabel.place(relx=0.025, rely=.1)
 
 
 		### Labels
