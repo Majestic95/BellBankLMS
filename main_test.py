@@ -9,6 +9,12 @@ from PIL import Image
 from PIL import ImageTk
 
 
+### Current To=Do Helpful Links
+
+### https://www.tutorialspoint.com/python/tk_pack.htm
+### https://stackoverflow.com/questions/7546050/switch-between-two-frames-in-tkinter
+
+
 class BellBankLMS(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -74,9 +80,9 @@ class pMenu(tk.Frame):
                             command=lambda: controller.show_frame("pQuizzes"))
         button3 = tk.Button(self, text="Management",
                             command=lambda: controller.show_frame("pMgmt"))
-        button1.pack(expand=1)
-        button2.pack(expand=1)
-        button3.pack(expand=1)
+        button1.pack()
+        button2.pack()
+        button3.pack()
 
 
 class pTraining(tk.Frame):
@@ -86,6 +92,7 @@ class pTraining(tk.Frame):
         self.controller = controller
         label = tk.Label(self, text="Training To-Do, Scheduling, etc.", foreground="blue", background="lightgray")
         label.pack(side="top", fill="x", pady=10)
+
         button = tk.Button(self, text="Go to the start page",
                            command=lambda: controller.show_frame("pMenu"))
         button.pack()
