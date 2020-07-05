@@ -1,0 +1,9 @@
+Management
+	-Class Roster (add, edit, delete functionality)
+		-Database of names
+			-First name
+			-Last name
+			-Hire date
+			-(?)Expandable list of 'Measurements'
+	-Curriculum Checklists
+		-
