@@ -8,3 +8,5 @@ The application's main goal is to help manage training classes by providing tool
 progress with a simple and lightweight database, as well as provide management tools for tracking overall training program success.
 
 3 Main Screens (besides the 'Home' screen): Training, Quizzes and Management
+
+https://github.com/Dvlv/Tkinter-By-Example
