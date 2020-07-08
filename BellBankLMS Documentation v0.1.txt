@@ -1,0 +1,19 @@
+DOCUMENTATION
+
+### Classes ###
+
+- BellBankLMS
+	- main root application, event loop controlled from here
+
+- page_Menu
+	- Main menu GUI (__init__() func)
+
+- page_Training
+	- Training screen GUI (__init__() func)
+
+- page_Quizzes
+	- Quizzes screen GUI (__init__() func)
+
+- page_Mgmt
+	- page_Roster
+	- Management screen GUI (__init__() func)
