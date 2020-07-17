@@ -209,10 +209,9 @@ class page_addClass(tk.Frame):
         label5.pack()
 
 
-
         ### Frame creation
-        userFrame = tk.Frame(self, width=230, height=150)
-        userFrame.pack(side=LEFT, anchor="nw", pady=10)
+        userFrame = tk.Frame(self, width=350, height=150, bg="black")
+        userFrame.pack(side=LEFT, anchor="nw", pady=10, ipadx=50)
 
 
         ### Text Boxes
@@ -222,11 +221,20 @@ class page_addClass(tk.Frame):
         tStartDate = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
         tPosition = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
 
+        ### Button(s)
+        bSubmit = tk.Button(userFrame, width=8, text="Submit", relief=RAISED)
+
+        ### Packing
         tFirstName.pack(pady=2, ipady=2)
         tLastName.pack(pady=2, ipady=2)
         tBranch.pack(pady=2, ipady=2)
         tStartDate.pack(pady=2, ipady=2)
         tPosition.pack(pady=2, ipady=2)
+        bSubmit.pack()
+
+
+        ### Frame creation
+
 
 
 

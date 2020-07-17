@@ -1,0 +1,18 @@
+7.17 Ideas for 'Bell Bank LMS'
+
+-- "Creating a Training Class" page
+
+	++ smart idea to add a 'Show Training Class/Hide Training Class'
+	   option; this would open a small, separate Scrollbar-based Window
+	   that actively logs the trainees you're adding
+
+	++ below the text boxes, you should be able to select from a Dropdown
+	   menu the 'class' or 'position' they'll be in and that should
+	   generate a list of "To-Do" for that class (Checklists class)
+
+-- Notes on Tkinter
+
+	++ in the .pack() function call, you can use non-integer numbers
+	   (decimals like 2.5) in pady, padx (not sure about ipady, ipadx)
+
+	
