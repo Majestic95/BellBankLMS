@@ -4,9 +4,9 @@ from tkinter import font  as tkfont # python 3
 from tkinter import *
 import importlib
 
-from PIL import *
-from PIL import Image
-from PIL import ImageTk
+# from PIL import *
+# from PIL import Image
+# from PIL import ImageTk
 
 
 ### Current To=Do Helpful Links
@@ -186,29 +186,47 @@ class page_addClass(tk.Frame):
 
         ### Title Label
         label = tk.Label(self, text="Creating a Training Class", foreground="blue", background="lightgray")
-        label.pack(side="top", fill="x", ipady=3, pady=10)
+        label.pack(side="top", fill="x", ipady=3)
 
 
         ### Frame creation (for organization)
-        userFrame = tk.Frame(self, width=100, height=100)
-        userFrame.pack(anchor="nw", pady=25)
+        staticFrame = tk.Frame(self, width=50, height=200, bg="blue")
+        staticFrame.pack(side=LEFT, anchor="nw", pady=10)
 
 
 
-        # staticFrame = tk.Frame(self, width=150, height=250, bg="lightgreen")
-        # staticFrame.pack()
-
-
-
-        label1 = tk.Label(userFrame, width=10, padx=27, text="First Name:", anchor="w")
-        label2 = tk.Label(userFrame, width=10, padx=27, text="Last Name:", anchor="w")
-        label3 = tk.Label(userFrame, width=10, padx=27, text="Branch:", anchor="w")
+        ### Labels
+        label1 = tk.Label(staticFrame, width=10, padx=27, pady=5, text="First Name:", anchor="w")
+        label2 = tk.Label(staticFrame, width=10, padx=27, pady=5, text="Last Name:", anchor="w")
+        label3 = tk.Label(staticFrame, width=10, padx=27, pady=5, text="Branch:", anchor="w")
+        label4 = tk.Label(staticFrame, width=10, padx=27, pady=5, text="Start Date:", anchor="w")
+        label5 = tk.Label(staticFrame, width=10, padx=27, pady=5, text="Position/Title:", anchor="w")
 
         label1.pack()
         label2.pack()
         label3.pack()
+        label4.pack()
+        label5.pack()
 
 
+
+        ### Frame creation
+        userFrame = tk.Frame(self, width=230, height=150)
+        userFrame.pack(side=LEFT, anchor="nw", pady=10)
+
+
+        ### Text Boxes
+        tFirstName = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        tLastName = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        tBranch = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        tStartDate = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        tPosition = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+
+        tFirstName.pack(pady=2, ipady=2)
+        tLastName.pack(pady=2, ipady=2)
+        tBranch.pack(pady=2, ipady=2)
+        tStartDate.pack(pady=2, ipady=2)
+        tPosition.pack(pady=2, ipady=2)
 
 
 
