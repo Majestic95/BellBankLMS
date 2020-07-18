@@ -193,69 +193,62 @@ class page_addClass(tk.Frame):
         label.pack(side="top", fill="x", ipady=3)
 
 
-        ### Frame creation (for organization)
-        staticFrame = tk.Frame(self)
-        staticFrame.pack(side="left", anchor="nw", pady=10)
-
-
+        ### Frame creation
+        self.staticFrame = tk.Frame(self)
 
         ### Labels
-        label1 = tk.Label(staticFrame, width=10, padx=27, pady=5, text="First Name:", anchor="w")
-        label2 = tk.Label(staticFrame, width=10, padx=27, pady=5, text="Last Name:", anchor="w")
-        label3 = tk.Label(staticFrame, width=10, padx=27, pady=5, text="Branch:", anchor="w")
-        label4 = tk.Label(staticFrame, width=10, padx=27, pady=5, text="Start Date:", anchor="w")
-        label5 = tk.Label(staticFrame, width=10, padx=27, pady=5, text="Position/Title:", anchor="w")
+        self.label1 = tk.Label(self.staticFrame, width=10, padx=27, pady=5, text="First Name:", anchor="nw")
+        self.label2 = tk.Label(self.staticFrame, width=10, padx=27, pady=5, text="Last Name:", anchor="nw")
+        self.label3 = tk.Label(self.staticFrame, width=10, padx=27, pady=5, text="Branch:", anchor="nw")
+        self.label4 = tk.Label(self.staticFrame, width=10, padx=27, pady=5, text="Start Date:", anchor="nw")
+        self.label5 = tk.Label(self.staticFrame, width=10, padx=27, pady=5, text="Position/Title:", anchor="nw")
 
-        label1.pack()
-        label2.pack()
-        label3.pack()
-        label4.pack()
-        label5.pack()
+
+        ### Packing
+        self.label1.pack()
+        self.label2.pack()
+        self.label3.pack()
+        self.label4.pack()
+        self.label5.pack()
 
 
 
         ### Frame creation
-        userFrame = tk.Frame(self)
-        userFrame.pack(side=LEFT, anchor="nw", pady=10, ipadx=50)
-
+        self.userFrame = tk.Frame(self)
 
 
         ### Text Boxes
-        self.tFirstName = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        ###     If there are future additions here, you have to add them to
+        ###     the function 'def createDbPreview' array as well
+
+        self.tFirstName = tk.Text(self.userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
         self.tFirstName.bind("<Tab>", self.focus_next_widget)
         self.tFirstName.bind("<Shift-Tab>", self.focus_last_widget)
 
 
-        self.tLastName = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        self.tLastName = tk.Text(self.userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
         self.tLastName.bind("<Tab>", self.focus_next_widget)
         self.tLastName.bind("<Shift-Tab>", self.focus_last_widget)
 
 
-        self.tBranch = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        self.tBranch = tk.Text(self.userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
         self.tBranch.bind("<Tab>", self.focus_next_widget)
         self.tBranch.bind("<Shift-Tab>", self.focus_last_widget)
 
 
-        self.tStartDate = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        self.tStartDate = tk.Text(self.userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
         self.tStartDate.bind("<Tab>", self.focus_next_widget)
         self.tStartDate.bind("<Shift-Tab>", self.focus_last_widget)
 
 
-        self.tPosition = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        self.tPosition = tk.Text(self.userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
         self.tPosition.bind("<Tab>", self.focus_next_widget)
         self.tPosition.bind("<Shift-Tab>", self.focus_last_widget)
 
 
-
-        ### Frame creation
-        self.displayFrame = tk.Frame(self)
-        self.displayFrame.pack(side=LEFT, anchor="n")
-
-
         ### Button(s)
-        self.bSubmit = tk.Button(userFrame, width=8, text="Submit", relief=RAISED)
-        self.bSubmit.bind('<ButtonRelease-1>', self.add_trainee)
-
+        self.bSubmit = tk.Button(self.userFrame, width=15, text="Submit for Review", relief=RAISED,
+                                    command = lambda: self.add_trainee())
 
 
         ### Packing
@@ -264,7 +257,53 @@ class page_addClass(tk.Frame):
         self.tBranch.pack(anchor="w", pady=2, ipady=2)
         self.tStartDate.pack(anchor="w", pady=2, ipady=2)
         self.tPosition.pack(anchor="w", pady=2, ipady=2)
-        self.bSubmit.pack(anchor="e", padx=20)
+        self.bSubmit.pack(anchor="e")
+
+
+        ### Frame creation ###
+        self.displayFrame = tk.Frame(self)
+
+
+        ### Labels (created with empty text; text will be filled with user entry from
+        ###         above tFirstName, tLastName, tBranch, tStartDate, tPosition)
+
+        self.lFirstName = tk.Label(self.displayFrame, font=("calibri", 14, 'bold', 'italic'), text="")
+        self.lLastName = tk.Label(self.displayFrame, font=("calibri", 14, 'bold', 'italic'), text="")
+        self.lPosition = tk.Label(self.displayFrame, font=("Helvetica", 10), text="")
+        self.lBranch = tk.Label(self.displayFrame, font=("Helvetica", 10), text="")
+        self.lHireDate = tk.Label(self.displayFrame, font=("Helvetica", 10), text="")
+
+        ### Button
+        self.bAddTrainee = tk.Button(self.userFrame, width=8, text="Submit", relief=RAISED)
+        self.bAddTrainee.bind('<ButtonRelease-1>', self.createLabel)
+
+
+        ### Packing
+        self.lHireDate.pack(side=BOTTOM, anchor="w")
+        self.lBranch.pack(side=BOTTOM, anchor="w")
+        self.lPosition.pack(side=BOTTOM, anchor="w")
+        self.lFirstName.pack(side=LEFT, anchor="w")        
+        self.lLastName.pack(side=LEFT, anchor="w", ipady=1)
+
+
+
+
+        ### Frame creation ###
+        self.testFrame = tk.Frame(self, highlightbackground="black", highlightthickness=1)
+
+        self.label1 = tk.Label(self.testFrame, text="THIS IS")
+        self.label2 = tk.Label(self.testFrame, text="testFrame")
+
+        self.label1.pack()
+        self.label2.pack()
+
+
+
+        ### FRAME PACKING
+        self.displayFrame.pack(side=BOTTOM, pady=70, padx=25, anchor="w")
+        self.staticFrame.pack(side=LEFT, anchor="nw")
+        self.userFrame.pack(side=LEFT, anchor="nw")
+        self.testFrame.pack(side=BOTTOM)
 
 
 
@@ -279,37 +318,42 @@ class page_addClass(tk.Frame):
         return("break")
 
 
-
-    def createLabel(self, trainee_info):
-        label = tk.Label(self.displayFrame, text=trainee_info, foreground="blue", background="lightgray", font=("Helvetica", 10))
-        label.pack(side=BOTTOM)
-
+        ### TO DO ###
+    def createLabel(self, event=None):
+        pass
 
 
-    def add_trainee(self, event=None):
+        ### TO DO: Priority 1 ###
+    def createDbPreview(self, array):
+        pass
+
+
+
+    def add_trainee(self):
 
         ### Variables
 
-        firstName = self.tFirstName
-        lastName = self.tLastName
-        branch = self.tBranch
-        startDate = self.tStartDate
-        position = self.tPosition
+        firstName = self.tFirstName.get(1.0,END).strip()
+        lastName = self.tLastName.get(1.0,END).strip()
+        branch = self.tBranch.get(1.0,END).strip()
+        startDate = self.tStartDate.get(1.0,END).strip()
+        position = self.tPosition.get(1.0,END).strip()
 
 
-        ### ALL above variables should be included in THIS for-loop;
+        ### ALL above variables should be included in THIS array;
         ### Current count: 5
+        self.user_Input = []
+
 
         for info in (firstName, lastName, branch, startDate, position):
 
-            if len(info.get(1.0,END).strip()) > 0:
-                self.createLabel(info)
-                print(info)
+            if len(self.user_Input) < 5:
+                self.user_Input.append(info)
+                pass
             else:
-                errorLabel = tk.Label(userFrame, text='{} is empty or has an invalid character.'.format(info), font="arial",
-                    bg="lightgray", fg="blue")
-                errorLabel.pack()
+                print("No data entered in a user entry field")
 
+        self.createDbPreview(self.user_Input)
 
 
 

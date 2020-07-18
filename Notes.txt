@@ -15,4 +15,7 @@
 	++ in the .pack() function call, you can use non-integer numbers
 	   (decimals like 2.5) in pady, padx (not sure about ipady, ipadx)
 
-	
+	++ relatively easy 'information' button template using this format:
+		messagebox.showinfo('button-text', 'pop-up window text')
+
+	++ 
