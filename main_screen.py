@@ -22,6 +22,7 @@ class BellBankLMS(tk.Tk):
 
 
         self.title_font = tkfont.Font(family='Helvetica', size=14, weight="bold", slant="italic")
+        self.subtitle_font = tkfont.Font(family='Helvetica', size=12, weight="bold")
 
         self.title('Bell Bank: Learning Management Software')
         self.geometry("450x450")
@@ -101,7 +102,7 @@ class page_Training(tk.Frame):
         self.controller = controller
 
         ### Title label
-        label = tk.Label(self, text="Training To-Do, Scheduling, etc.", foreground="blue", background="lightgray")
+        label = tk.Label(self, text="Training To-Do, Scheduling, etc.", font=controller.subtitle_font, foreground="blue", background="lightgray")
         label.pack(side="top", fill="x", ipady=3, pady=10)
 
         ### Page button(s)
@@ -118,7 +119,7 @@ class page_Quizzes(tk.Frame):
         self.controller = controller
 
         ### Title label        
-        label = tk.Label(self, text="Quiz Scores, Performance, etc.", foreground="blue", background="lightgray")
+        label = tk.Label(self, text="Quiz Scores, Performance, etc.", font=controller.subtitle_font, foreground="blue", background="lightgray")
         label.pack(side="top", fill="x", ipady=3, pady=10)
 
         ### Page button(s)
@@ -135,7 +136,7 @@ class page_Mgmt(tk.Frame):
         self.controller = controller
 
         ### Title label
-        label = tk.Label(self, text="Trainer Admin: Course, Roster and Training Mgmt", foreground="blue", background="lightgray")
+        label = tk.Label(self, text="Trainer Admin: Course, Roster and Training Mgmt", font=controller.subtitle_font, foreground="blue", background="lightgray")
         label.pack(side="top", fill="x", ipady=3, pady=10)
 
         ### Page button(s)
@@ -155,7 +156,7 @@ class page_Roster(tk.Frame):
         self.controller = controller
 
         ### Title label
-        label = tk.Label(self, text="Roster Management", foreground="blue", background="lightgray")
+        label = tk.Label(self, text="Roster Management", font=controller.subtitle_font, foreground="blue", background="lightgray")
         label.pack(side="top", fill="x", ipady=3, pady=10)
 
         ### Page button(s)
@@ -173,11 +174,13 @@ class page_Roster(tk.Frame):
 
 class page_addClass(tk.Frame):
 
+
     def __init__(self, parent, controller, trainees=None):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
 
+        ### TODO: Does this need to exist? Investigate
         if not trainees:
             self.trainees = []
         else:
@@ -185,13 +188,14 @@ class page_addClass(tk.Frame):
 
 
         ### Title Label
-        label = tk.Label(self, text="Creating a Training Class", foreground="blue", background="lightgray")
+        label = tk.Label(self, text="Creating a Training Class", font=controller.subtitle_font,
+                            foreground="blue", background="lightgray")
         label.pack(side="top", fill="x", ipady=3)
 
 
         ### Frame creation (for organization)
-        staticFrame = tk.Frame(self, width=50, height=200, bg="blue")
-        staticFrame.pack(side=LEFT, anchor="nw", pady=10)
+        staticFrame = tk.Frame(self)
+        staticFrame.pack(side="left", anchor="nw", pady=10)
 
 
 
@@ -209,31 +213,103 @@ class page_addClass(tk.Frame):
         label5.pack()
 
 
+
         ### Frame creation
-        userFrame = tk.Frame(self, width=350, height=150, bg="black")
+        userFrame = tk.Frame(self)
         userFrame.pack(side=LEFT, anchor="nw", pady=10, ipadx=50)
 
 
+
         ### Text Boxes
-        tFirstName = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
-        tLastName = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
-        tBranch = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
-        tStartDate = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
-        tPosition = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        self.tFirstName = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        self.tFirstName.bind("<Tab>", self.focus_next_widget)
+        self.tFirstName.bind("<Shift-Tab>", self.focus_last_widget)
 
-        ### Button(s)
-        bSubmit = tk.Button(userFrame, width=8, text="Submit", relief=RAISED)
 
-        ### Packing
-        tFirstName.pack(pady=2, ipady=2)
-        tLastName.pack(pady=2, ipady=2)
-        tBranch.pack(pady=2, ipady=2)
-        tStartDate.pack(pady=2, ipady=2)
-        tPosition.pack(pady=2, ipady=2)
-        bSubmit.pack()
+        self.tLastName = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        self.tLastName.bind("<Tab>", self.focus_next_widget)
+        self.tLastName.bind("<Shift-Tab>", self.focus_last_widget)
+
+
+        self.tBranch = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        self.tBranch.bind("<Tab>", self.focus_next_widget)
+        self.tBranch.bind("<Shift-Tab>", self.focus_last_widget)
+
+
+        self.tStartDate = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        self.tStartDate.bind("<Tab>", self.focus_next_widget)
+        self.tStartDate.bind("<Shift-Tab>", self.focus_last_widget)
+
+
+        self.tPosition = tk.Text(userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        self.tPosition.bind("<Tab>", self.focus_next_widget)
+        self.tPosition.bind("<Shift-Tab>", self.focus_last_widget)
+
 
 
         ### Frame creation
+        self.displayFrame = tk.Frame(self)
+        self.displayFrame.pack(side=LEFT, anchor="n")
+
+
+        ### Button(s)
+        self.bSubmit = tk.Button(userFrame, width=8, text="Submit", relief=RAISED)
+        self.bSubmit.bind('<ButtonRelease-1>', self.add_trainee)
+
+
+
+        ### Packing
+        self.tFirstName.pack(anchor="w", pady=2, ipady=2)
+        self.tLastName.pack(anchor="w", pady=2, ipady=2)
+        self.tBranch.pack(anchor="w", pady=2, ipady=2)
+        self.tStartDate.pack(anchor="w", pady=2, ipady=2)
+        self.tPosition.pack(anchor="w", pady=2, ipady=2)
+        self.bSubmit.pack(anchor="e", padx=20)
+
+
+
+    def focus_next_widget(self, event):
+        event.widget.tk_focusNext().focus()
+        return("break")
+
+
+
+    def focus_last_widget(self, event):
+        event.widget.tk_focusPrev().focus()
+        return("break")
+
+
+
+    def createLabel(self, trainee_info):
+        label = tk.Label(self.displayFrame, text=trainee_info, foreground="blue", background="lightgray", font=("Helvetica", 10))
+        label.pack(side=BOTTOM)
+
+
+
+    def add_trainee(self, event=None):
+
+        ### Variables
+
+        firstName = self.tFirstName
+        lastName = self.tLastName
+        branch = self.tBranch
+        startDate = self.tStartDate
+        position = self.tPosition
+
+
+        ### ALL above variables should be included in THIS for-loop;
+        ### Current count: 5
+
+        for info in (firstName, lastName, branch, startDate, position):
+
+            if len(info.get(1.0,END).strip()) > 0:
+                self.createLabel(info)
+                print(info)
+            else:
+                errorLabel = tk.Label(userFrame, text='{} is empty or has an invalid character.'.format(info), font="arial",
+                    bg="lightgray", fg="blue")
+                errorLabel.pack()
+
 
 
 
