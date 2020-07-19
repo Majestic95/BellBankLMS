@@ -33,7 +33,7 @@ class BellBankLMS(tk.Tk):
         # on top of each other, then the one we want visible
         # will be raised above the others
         container = tk.Frame(self)
-        container.pack(side="top", fill="both", expand=True)
+        container.pack(side=TOP, fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
@@ -174,10 +174,20 @@ class page_Roster(tk.Frame):
 
 class page_addClass(tk.Frame):
 
-
     def __init__(self, parent, controller, trainees=None):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+
+
+
+        ### MASTER FRAME topFrame - COMPLEX .grid() LAYOUT
+        self.topFrame = tk.Frame(self, highlightthickness=1, highlightbackground="green")
+        self.topFrame.grid()
+
+        self.topFrame.grid_columnconfigure(0, weight=1)
+        self.topFrame.grid_rowconfigure(0, weight=1)
+
+        print(self.topFrame.grid_size())
 
 
         ### TODO: Does this need to exist? Investigate
@@ -188,13 +198,13 @@ class page_addClass(tk.Frame):
 
 
         ### Title Label
-        label = tk.Label(self, text="Creating a Training Class", font=controller.subtitle_font,
-                            foreground="blue", background="lightgray")
-        label.pack(side="top", fill="x", ipady=3)
+        label = tk.Label(self.topFrame, text="Creating a Training Class", font=controller.subtitle_font,
+                            foreground="blue")
+        label.grid(row=0, column=0)
 
 
         ### Frame creation
-        self.staticFrame = tk.Frame(self)
+        self.staticFrame = tk.Frame(self.topFrame, highlightbackground="black", highlightthickness=1)
 
         ### Labels
         self.label1 = tk.Label(self.staticFrame, width=10, padx=27, pady=5, text="First Name:", anchor="nw")
@@ -214,58 +224,73 @@ class page_addClass(tk.Frame):
 
 
         ### Frame creation
-        self.userFrame = tk.Frame(self)
+        self.userFrame = tk.Frame(self.topFrame, highlightbackground="black", highlightthickness=1)
 
 
-        ### Text Boxes
+        ### Variables used in Entry boxes on page_addClass
+
+        self.sFirstName = StringVar()
+        self.sLastName = StringVar()
+        self.sBranch = StringVar()
+        self.sHireDate = StringVar()
+        self.sPosition = StringVar()
+
+
+
+        ### Entry Boxes
         ###     If there are future additions here, you have to add them to
         ###     the function 'def createDbPreview' array as well
 
-        self.tFirstName = tk.Text(self.userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        self.tFirstName = tk.Entry(self.userFrame, font=("Helvetica", 10), width=30, bg="white", fg="black",
+                                    textvariable=self.sFirstName)
         self.tFirstName.bind("<Tab>", self.focus_next_widget)
         self.tFirstName.bind("<Shift-Tab>", self.focus_last_widget)
 
 
-        self.tLastName = tk.Text(self.userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        self.tLastName = tk.Entry(self.userFrame, font=("Helvetica", 10), width=30, bg="white", fg="black",
+                                    textvariable=self.sLastName)
         self.tLastName.bind("<Tab>", self.focus_next_widget)
         self.tLastName.bind("<Shift-Tab>", self.focus_last_widget)
 
 
-        self.tBranch = tk.Text(self.userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        self.tBranch = tk.Entry(self.userFrame, font=("Helvetica", 10), width=30, bg="white", fg="black",
+                                    textvariable=self.sBranch)
         self.tBranch.bind("<Tab>", self.focus_next_widget)
         self.tBranch.bind("<Shift-Tab>", self.focus_last_widget)
 
 
-        self.tStartDate = tk.Text(self.userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
-        self.tStartDate.bind("<Tab>", self.focus_next_widget)
-        self.tStartDate.bind("<Shift-Tab>", self.focus_last_widget)
+        self.tHireDate = tk.Entry(self.userFrame, font=("Helvetica", 10), width=30, bg="white", fg="black",
+                                    textvariable=self.sHireDate)
+        self.tHireDate.bind("<Tab>", self.focus_next_widget)
+        self.tHireDate.bind("<Shift-Tab>", self.focus_last_widget)
 
 
-        self.tPosition = tk.Text(self.userFrame, font=("Helvetica", 10), width=30, height=1, bg="white", fg="black")
+        self.tPosition = tk.Entry(self.userFrame, font=("Helvetica", 10), width=30, bg="white", fg="black",
+                                    textvariable=self.sPosition)
         self.tPosition.bind("<Tab>", self.focus_next_widget)
         self.tPosition.bind("<Shift-Tab>", self.focus_last_widget)
 
 
         ### Button(s)
         self.bSubmit = tk.Button(self.userFrame, width=15, text="Submit for Review", relief=RAISED,
-                                    command = lambda: self.add_trainee())
+                                    command = lambda: self.createDbPreview())
 
 
         ### Packing
         self.tFirstName.pack(anchor="w", pady=2, ipady=2)
         self.tLastName.pack(anchor="w", pady=2, ipady=2)
         self.tBranch.pack(anchor="w", pady=2, ipady=2)
-        self.tStartDate.pack(anchor="w", pady=2, ipady=2)
+        self.tHireDate.pack(anchor="w", pady=2, ipady=2)
         self.tPosition.pack(anchor="w", pady=2, ipady=2)
         self.bSubmit.pack(anchor="e")
 
 
         ### Frame creation ###
-        self.displayFrame = tk.Frame(self)
+        self.displayFrame = tk.Frame(self.topFrame, highlightbackground="black", highlightthickness=1)
 
 
         ### Labels (created with empty text; text will be filled with user entry from
-        ###         above tFirstName, tLastName, tBranch, tStartDate, tPosition)
+        ###         above tFirstName, tLastName, tBranch, tHireDate, tPosition)
 
         self.lFirstName = tk.Label(self.displayFrame, font=("calibri", 14, 'bold', 'italic'), text="")
         self.lLastName = tk.Label(self.displayFrame, font=("calibri", 14, 'bold', 'italic'), text="")
@@ -289,7 +314,7 @@ class page_addClass(tk.Frame):
 
 
         ### Frame creation ###
-        self.testFrame = tk.Frame(self, highlightbackground="black", highlightthickness=1)
+        self.testFrame = tk.Frame(self.topFrame, highlightbackground="black", highlightthickness=1)
 
         self.label1 = tk.Label(self.testFrame, text="THIS IS")
         self.label2 = tk.Label(self.testFrame, text="testFrame")
@@ -299,11 +324,13 @@ class page_addClass(tk.Frame):
 
 
 
+
+
         ### FRAME PACKING
-        self.displayFrame.pack(side=BOTTOM, pady=70, padx=25, anchor="w")
-        self.staticFrame.pack(side=LEFT, anchor="nw")
-        self.userFrame.pack(side=LEFT, anchor="nw")
-        self.testFrame.pack(side=BOTTOM)
+        self.displayFrame.grid(row=2, column=1)
+        self.staticFrame.grid(row=1, column=1)
+        self.userFrame.grid(row=1, column=2)
+        self.testFrame.grid(row=2, column=2)
 
 
 
@@ -324,37 +351,24 @@ class page_addClass(tk.Frame):
 
 
         ### TO DO: Priority 1 ###
-    def createDbPreview(self, array):
+    def add_trainee(self):
         pass
 
 
 
-    def add_trainee(self):
 
-        ### Variables
+    def createDbPreview(self):
 
-        firstName = self.tFirstName.get(1.0,END).strip()
-        lastName = self.tLastName.get(1.0,END).strip()
-        branch = self.tBranch.get(1.0,END).strip()
-        startDate = self.tStartDate.get(1.0,END).strip()
-        position = self.tPosition.get(1.0,END).strip()
+        ### Using StringVars to display preview of
+        ### employee before database submission
 
+        self.lFirstName['text'] = self.sFirstName.get()
+        self.lLastName['text'] = self.sLastName.get()
+        self.lBranch['text'] = self.sBranch.get()
+        self.lHireDate['text'] = self.sHireDate.get()
+        self.lPosition['text'] = self.sPosition.get()
 
-        ### ALL above variables should be included in THIS array;
-        ### Current count: 5
-        self.user_Input = []
-
-
-        for info in (firstName, lastName, branch, startDate, position):
-
-            if len(self.user_Input) < 5:
-                self.user_Input.append(info)
-                pass
-            else:
-                print("No data entered in a user entry field")
-
-        self.createDbPreview(self.user_Input)
-
+        self.add_trainee()
 
 
 
