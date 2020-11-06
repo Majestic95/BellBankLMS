@@ -65,4 +65,6 @@ NOTES
 1.d. Sorting, retrieving, modifying and deleting data
 
     I. How to retrieve information from DB
+      - Use fetchone(), fetchmany(), or fetchall() methods on Cursor object to retrieve items from DB
       
+        
