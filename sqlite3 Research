@@ -9,6 +9,11 @@ Bell Bank LMS: Research Steps to Success
   f. How to make database information accessible & portable (class and inheritance)
  
  
+NOTES
+- execute() method will only execute a single SQL statement/command; use executescript() method to process multiple scripts
+- fetchone() and fetchmany(size=cursor.arraysize) are used to retrieve a row or a set of rows (in a list)
+
+ 
  
 1.a. How to create SQLite database & create tables in database
 
@@ -56,3 +61,8 @@ Bell Bank LMS: Research Steps to Success
       conn.commit()
       
     
+    
+1.d. Sorting, retrieving, modifying and deleting data
+
+    I. How to retrieve information from DB
+      
