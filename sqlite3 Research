@@ -1,0 +1,58 @@
+Bell Bank LMS: Research Steps to Success
+
+1. Learning about SQLite databases
+  a. How to create databases
+  b. How to set rows and columns
+  c. How to add item(s) into database
+  d. Sorting features of SQLite (tuples, arrays, dictionaries, lists research too)
+  e. How to retrieve specific information in database
+  f. How to make database information accessible & portable (class and inheritance)
+ 
+ 
+ 
+1.a. How to create SQLite database & create tables in database
+
+  - You must have Connection object that represents the database (example below with database titled 'example.db'):
+      import sqlite3
+      conn = sqlite3.connect('example.db')
+  
+  - Next, you need Cursor object built off your Connection object (in example, Connection is named 'conn')
+      c = conn.cursor()
+      
+      # Create table in database
+      c.execute('''CREATE TABLE stocks
+                   (date text, trans text, symbol text, qty real, price real)''')
+                   
+  ** To keep it simple, (1) Connection -> (2) Cursor -> (3) .execute() **
+  ** Remember to use .commit() method on your Connection object ('conn.commit()') after every SQL change/transaction **
+  
+  
+  
+1.b. How to set rows and columns
+
+  - When creating the database (DB), you can create up to 64 tables using SQL syntax (a table being created is seen above, lines 20-22)
+      * each table will have its own set of rows & columns that are declared when you create the table
+      * for example, to create a table called Trainees with each trainee's first name, last name, location, hire/start date, & position title
+        (each with a unique and public shortcode), you would need the following syntax:
+        
+        import sqlite3
+        conn = sqlite3.connect('BellBankLMS.db')
+        
+        c = conn.cursor()
+        
+        c.execute('''CREATE TABLE trainees
+                     (firstname text, lastname text, location text, date integer, title text)''')
+                     
+      * the above code would set five columns, each with their own title and storage class ('firstname' and 'text', etc.)
+  
+
+
+1.c. How to add items into database
+
+    - After table creation in DB, you use the .execute() function to take input from user and enter it into SQLite DB
+    - This will expand the number of rows needed, as pictured below:
+    
+      c.execute("INSERT INTO trainees VALUES ('AUSTIN', 'NOYES', 'MHD', 010715, 'TRAINER')")
+      conn.commit()
+      
+    
