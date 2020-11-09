@@ -1,0 +1,20 @@
+First, we are going to define the nouns of this program:
+
+- Trainee
+    - First name
+    - Last name
+    - Training date
+    - Location
+    - Position; title
+- Class List; Roster
+    - Trainee
+- Schedule
+- Data
+- Database
+- Checklist
+- Curriculum
+
+Thoughts:
+  - Data flow: when thinking about relationships between the nouns, ask yourself:
+      ? What data does X function or class need from its relationship with Y function or class
+      ? CRUD: Design functions (and class structure) with one simple goal for each unit; create, read, update, or delete
