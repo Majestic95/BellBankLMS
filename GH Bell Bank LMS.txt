@@ -1,0 +1,44 @@
+1. User opens Curriculum Designer
+2. User is presented with
+	I. Curriculum Creation
+		1. User will be prompted with 'Create New
+		   Curriculum Plan' button
+	
+		* Tkinter button w/ on-click command
+		
+		2. User will type in Curriculum Title
+
+		* Tkinter entry box w/ search button
+		* curriculum_key
+		* SQLite method call to ".execute()"
+			- search database against user title input
+				- if match found, break loop and print ("failure")
+				- if match not found
+					- store item as new dictionary key
+					- proceed to step 3
+
+		3. User will be able to add quizzes and/or
+		   checkpoints for the new curriculum plan
+		   (these quizzes/checkpoints will take the GUI
+
+		* Tkinter entry box w/ submit button & two radiobuttons
+		* User types in item name, then clicks submit
+			- search existing
+
+		4. When finished, user will have option to
+		   'Save' or 'Save & Exit'
+		5. User is reverted back to Step #2
+	II. Curriculum Review
+		1. User will be prompted with 'Select Existing
+		   Curriculum'
+		2. User will select Curriculum Plan (CP) to edit
+		3. User will have selected CP opened and
+		   can:
+			a. Add additional items to existing
+			   CP
+			b. Edit items in existing CP
+			c. Delete items or delete the CP
+				- Are you sure you want to delete?
+		4. When finished, user will have option to
+		   'Save' or 'Save & Exit'
+		5. User is reverted back to Step #2

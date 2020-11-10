@@ -1,0 +1,24 @@
+class Trainee():
+     def __init__(self, firstName, lastName, trainDate, grades, position, notes):
+	self.firstName = firstName
+	self.lastName = lastName
+	self.trainDate = trainDate
+	self.grades = grades or {}
+	self.position = position
+	self.notes = notes
+
+
+     def getName(self, firstName, lastName):
+	"""Method to assign first and last name to Trainee object"""
+	self.firstName = input("Enter first name:")
+	self.lastName = input("Enter last name:")
+
+	
+     def getTrainDate(self, trainDate):
+	"""Method to assign training date to Trainee object"""
+	self.trainDate = input("Please enter date of training:")
+
+
+     def setGrade(self, course, grade):
+	"""Method to assign grade to specific course"""
+	

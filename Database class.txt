@@ -1,0 +1,25 @@
+import sqlite3
+
+class Database():
+     def __init__(self):
+     """Init method"""
+	
+
+
+     def establishConnection(self):
+     """Method to establish connection and return cursor for use"""
+	try:
+	     db = sqlite3.connect('BellBankLMS.db')
+	     cursor = db.cursor()
+	     print("Connection successfully established. Awaiting cursor action...")
+	     return cursor
+	except sqlite3.Error as error:
+	     print("Error while attempting SQLite connection.", error)
+	     return None
+
+Notes for Database() class:
+
+TO DO
+1. Function that returns a connection OR a cursor (research needed)
+2. Question: When using SQLite and Python, is it best practice to create
+	     

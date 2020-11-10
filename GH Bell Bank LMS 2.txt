@@ -1,0 +1,33 @@
+import Database
+
+class Curriculum():
+     
+     def __init__(self, curriculum):
+     """Init method: creates instance of curriculum dictionary
+        keys are curriculum, values are items to track for completion
+	within that curriculum"""
+
+	self.curriculum = {}
+	self.curriculum_title = None
+
+
+     def isUnique(self, title, db_file):
+     """Method to check if curriculum title already exists in database"""
+	
+
+
+     def isGraded(self, item):
+     """Method to read whether item added to curriculum needs checkbox"""
+
+
+     def addCurriculum(self):
+	"""Method to add curriculum title"""
+	curriculum_title = input("Please enter the curriculum title:")
+	
+
+	return curriculum_title
+	
+
+     def addItem(self, item):
+	"""Method to add item to curriculum list"""
+	item = input("Please enter curriculum module or quiz name:")
