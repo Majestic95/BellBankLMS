@@ -1,0 +1,51 @@
+SQLite Foreign Keys Notes
+
+- You can use SQLite 'foreign key' constraint to enforce relationships
+  between tables
+- To add the foreign key constraint to curriculum table, you can change
+  the definition of the CREATE TABLE statement as follows:
+
+	- CREATE TABLE table1 (attribute1 INTEGER PRIMARY KEY,
+			       attribute2 TEXT    NOT NULL,
+			       attribute3 INTEGER PRIMARY KEY,
+		      	       FOREIGN KEY (attribute3)
+			          REFERENCES table2 (attribute3)
+	  		      );
+
+- table2 is called a parent table, which is the table the foreign key references
+- table1 is known as child table, which is the table to which the foreign key applies
+	- attribute1 column in table1 is called the "parent key"
+		- a column or set of columns in the parent table that the foreign
+		  key references; typically the parent key is the primary key of
+		  the primary table
+
+- ON DELETE and ON UPDATE actions allow you to specify how foreign keys behave
+  when their parent key is deleted or updated
+
+FOREIGN KEY (foreign_key_columns)
+   REFERENCES parent_table(parent_key_columns)
+      ON UPDATE action 
+      ON DELETE action;
+
+5 possible 'actions':
+- (a) SET NULL, (b) SET DEFAULT, (c) RESTRICT, (d) NO ACTION, (e) CASCADE
+
+(a) SET NULL
+	- When parent key changes, deletes or updates, the corresponding child key
+	  sets all to NULL
+
+(b) SET DEFAULT
+	- Sets the value of the foreign key to the default value specified in the
+	  column definition when you create table; typically NULL
+
+(c) RESTRICT
+	- Does not allow changes or deletes to values in the parent key of parent
+	  table
+
+(d) NO ACTION
+	- Similiar to restrict; nothing happens to values
+
+(e) CASCADE
+	- Tries to duplicate action made to parent key
+
+Example - https://www.sqlitetutorial.net/sqlite-foreign-key/
