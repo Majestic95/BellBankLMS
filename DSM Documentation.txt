@@ -1,0 +1,18 @@
+*Asterisk represents REQUIRED field for user input
+
+Table trainees:
+	- *First name, text
+	- *Last name, text
+	- *Training date, int (format: 010121 for January 1st, 2021)
+	- Position, text (ex: csclvl1, csclvl2, csclvl3, csclvls or something)
+
+Table curriculums:
+	- *ID, int (internal, references modules table CurriculumID)
+	- Title, text (ex: CSC Level 1 Training)
+	- LevelID, int (legend/key will be on-screen; admin edit only?)
+
+Table modules:
+	- *CurriculumID, int (internal, references curriculum table ID)
+	- Title, text (ex: Aperio Task guide review)
+	- Grade, integer (format: 0-100 percentage, ex: 94 to represent 94%)
+	- 
