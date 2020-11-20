@@ -2,8 +2,6 @@ from sqlalchemy import MetaData, create_engine, Column, Integer, String, Foreign
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = create_engine('sqlite:///database_test.db', echo=True)
-
 Base = declarative_base()
 
 # Creates many-to-many relationship between 'trainee' and 'curriculum' tables below
@@ -28,8 +26,6 @@ class Curriculum(Base):
 	id = Column(Integer, primary_key=True)
 	curriculum_id = Column(Integer, ForeignKey("trainee.trainee_id"))
 	curriculum_title = Column(String)
-	quiz_id = Column(Integer)
-	module_id = Column(Integer)
 	quizzes = relationship("Quiz", backref=backref("Curriculum"))
 	modules = relationship("Module", backref=backref("Curriculum"))
 
@@ -48,6 +44,3 @@ class Module(Base):
 	title = Column(String)
 	grade = Column(Integer)
 	notes = Column(String)
-
-
-Base.metadata.create_all(engine)
