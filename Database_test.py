@@ -1,6 +1,8 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Table
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import Column, Integer, String, ForeignKey, Table, create_engine
+from sqlalchemy.orm import relationship, backref, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+
+engine = create_engine('sqlite:///database_test.db', echo=True)
 
 Base = declarative_base()
 
@@ -40,7 +42,7 @@ class Curriculum(Base):
 class Quiz(Base):
 	__tablename__ = "quiz"
 	quiz_id = Column(Integer, primary_key=True)
-	curriculum_id = Column(Integer, ForeignKey("curriculum.quiz_id"))
+	curriculum_id = Column(Integer, ForeignKey("curriculum.curriculum_id"))
 	title = Column(String)
 	grade = Column(Integer)
 	notes = Column(String)
@@ -49,7 +51,11 @@ class Quiz(Base):
 class Module(Base):
 	__tablename__ = "module"
 	module_id = Column(Integer, primary_key=True)
-	curriculum_id = Column(Integer, ForeignKey("curriculum.module_id"))
+	curriculum_id = Column(Integer, ForeignKey("curriculum.curriculum_id"))
 	title = Column(String)
 	grade = Column(Integer)
 	notes = Column(String)
+
+
+
+Base.metadata.create_all(engine)
