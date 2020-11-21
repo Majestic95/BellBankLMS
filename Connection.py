@@ -9,6 +9,29 @@ from Database_test import Trainee, Curriculum, Quiz, Module
 from treelib import Tree
 
 
+def get_quizzes_by_curriculum(session, ascending=True):
+	"""Get a list of curriculums and the number of quizzes they contain
+	Args:
+		session: database session to use
+		ascending: direction to sort the results
+	Returns:
+		List: list of curriculums sorted by number of quizzes contained
+	"""
+	if not isinstance(ascending, bool):
+		raise ValueError(f"Sorting value invalid: {ascending}")
+
+	direction = asc if ascending else desc
+
+	return (
+		session.query(
+			Curriculum.curriculum_title, func.count(Quiz.title).label("total_quizzes")
+			)
+		.join(Curriculum.quizzes)
+		.group_by(Curriculum.curriculum_title)
+		.order_by(direction("total_quizzes"))
+	)
+
+
 def add_new_trainee(session, first_name, last_name, train_date, position=None):
 	"""Adds a new trainee to the system"""
 
@@ -57,7 +80,7 @@ def add_new_curriculum(session, curriculum_title):
 	session.commit()
 
 
-def add_new_quiz(session, quiz_title, quiz_grade, quiz_notes=None):
+def add_new_quiz(session, curriculum_title, quiz_title, quiz_grade, quiz_notes=None):
 	"""Adds a new quiz to the system"""
 
 	# Check if quiz exists
@@ -76,6 +99,28 @@ def add_new_quiz(session, quiz_title, quiz_grade, quiz_notes=None):
 	if quiz is None:
 		quiz = Quiz(title = quiz_title, grade = quiz_grade, notes = quiz_notes)
 		print("Quiz successfully added.")
+
+	# Get the curriculum
+	curriculum = (
+		session.query(Curriculum)
+		.filter(Curriculum.curriculum_title == curriculum_title)
+		.one_or_none()
+		)
+
+	# Assigning curriculum variable to existing curriculum, if one exists
+	# if curriculum is not None:
+	# 	curriculum = (
+	# 		session.query(Curriculum)
+	# 		.filter(Curriculum.curriculum_title == )
+	# 		)
+
+	# Do we need to create the curriculum?
+	if curriculum is None:
+		curriculum = Curriculum(curriculum_title = curriculum_title)
+		session.add(curriculum)
+
+	# Initialize the curriculum relationships
+	quiz.curriculum = curriculum
 
 	session.add(quiz)
 	session.commit()
@@ -154,6 +199,14 @@ def main():
 	Session.configure(bind=engine)
 	session = Session()
 
+	# Get the number of quizzes within each curriculum
+	quizzes_by_curriculum = get_quizzes_by_curriculum(session, ascending=False)
+	for row in quizzes_by_curriculum:
+		print(f"Curriculum: {row.name}, total quizzes: {row.total_quizzes}")
+	print()
+
+	print("Quizzes to curriculums generated.")
+
 	add_new_trainee(
 		session,
 		first_name="Austin",
@@ -169,6 +222,7 @@ def main():
 
 	add_new_quiz(
 		session,
+		curriculum_title="CSC Level 1 Training",
 		quiz_title="Q2 Worksheet 1",
 		quiz_grade="100",
 		quiz_notes="This quiz went really well! You have made excellent progress!"
