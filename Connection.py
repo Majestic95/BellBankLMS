@@ -24,8 +24,9 @@ def get_quizzes_by_curriculum(session, ascending=True):
 
 	return (
 		session.query(
-			Curriculum.curriculum_title, func.count(Quiz.title).label("total_quizzes")
-			)
+			Curriculum.curriculum_title,
+			func.count(Quiz.title).label("total_quizzes")
+		)
 		.join(Curriculum.quizzes)
 		.group_by(Curriculum.curriculum_title)
 		.order_by(direction("total_quizzes"))
@@ -52,6 +53,7 @@ def add_new_trainee(session, first_name, last_name, train_date, position=None):
 		trainee = Trainee(first_name=first_name, last_name=last_name, train_date=train_date, position=position)
 		print("Trainee successfully added.")
 
+    # Commit to the database
 	session.add(trainee)
 	session.commit()
 
@@ -76,6 +78,7 @@ def add_new_curriculum(session, curriculum_title):
 		curriculum = Curriculum(curriculum_title = curriculum_title)
 		print("Curriculum successfully added.")
 
+    # Commit to the database
 	session.add(curriculum)
 	session.commit()
 
@@ -93,7 +96,6 @@ def add_new_quiz(session, curriculum_title, quiz_title, quiz_grade, quiz_notes=N
 	# Does the quiz already exist?
 	if quiz is not None:
 		print("Error. Quiz exists.")
-		return
 
 	# Create the new quiz if needed
 	if quiz is None:
@@ -107,22 +109,18 @@ def add_new_quiz(session, curriculum_title, quiz_title, quiz_grade, quiz_notes=N
 		.one_or_none()
 		)
 
-	# Assigning curriculum variable to existing curriculum, if one exists
-	# if curriculum is not None:
-	# 	curriculum = (
-	# 		session.query(Curriculum)
-	# 		.filter(Curriculum.curriculum_title == )
-	# 		)
-
 	# Do we need to create the curriculum?
 	if curriculum is None:
 		curriculum = Curriculum(curriculum_title = curriculum_title)
 		session.add(curriculum)
 
-	# Initialize the curriculum relationships
-	quiz.curriculum = curriculum
+	print(curriculum.curriculum_id)
 
+	# Initialize the curriculum relationships
+	quiz.curriculums.append(curriculum)
 	session.add(quiz)
+
+	# Commit to the database
 	session.commit()
 
 
@@ -202,28 +200,29 @@ def main():
 	# Get the number of quizzes within each curriculum
 	quizzes_by_curriculum = get_quizzes_by_curriculum(session, ascending=False)
 	for row in quizzes_by_curriculum:
-		print(f"Curriculum: {row.name}, total quizzes: {row.total_quizzes}")
+		print(row)
 	print()
 
 	print("Quizzes to curriculums generated.")
 
-	add_new_trainee(
-		session,
-		first_name="Austin",
-		last_name="Noyes",
-		train_date='010615',
-		position="CSCTrainer",
-		)
+	# add_new_trainee(
+	# 	session,
+	# 	first_name="Austin",
+	# 	last_name="Noyes",
+	# 	train_date='010615',
+	# 	position="CSCTrainer",
+	# 	)
 
-	add_new_curriculum(
-		session,
-		curriculum_title="CSC Level 1 Training",
-		)
+	# add_new_curriculum(
+	# 	session,
+	# 	curriculum_title="CSC Level 1 Training",
+	# 	)
 
 	add_new_quiz(
 		session,
+		# curriculum_title won't be string entry, it will have GUI drop-down for user selection
 		curriculum_title="CSC Level 1 Training",
-		quiz_title="Q2 Worksheet 1",
+		quiz_title="Checkpoint 1",
 		quiz_grade="100",
 		quiz_notes="This quiz went really well! You have made excellent progress!"
 		)
