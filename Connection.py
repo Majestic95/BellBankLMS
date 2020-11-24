@@ -4,7 +4,7 @@ from sqlalchemy import and_, create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.sql import asc, desc, func
 
-from Database_test import Trainee, Curriculum, Quiz, Module
+from Database_test import Trainee, Curriculum, Quiz, Module, quiz_curriculum, module_curriculum
 
 from treelib import Tree
 
@@ -31,6 +31,86 @@ def get_quizzes_by_curriculum(session, ascending=True):
 		.group_by(Curriculum.curriculum_title)
 		.order_by(direction("total_quizzes"))
 	)
+
+
+def get_curriculums_by_quiz(session, ascending=True):
+	"""Get a list of quizzes and the number of curriculums they belong to
+	Args:
+		session: database session to use
+		ascending: direction to sort the results
+	Returns:
+		List: list of quizzes sorted by number of curriculums they belong to
+	"""
+	if not isinstance(ascending, bool):
+		raise ValueError(f"Sorting value invalid: {ascending}")
+
+	direction = asc if ascending else desc
+
+	return (
+		session.query(
+			Quiz.title,
+			func.count(Quiz.title).label("total_curriculums")
+		)
+		.join(Quiz.curriculums)
+		.group_by(Quiz.title)
+		.order_by(direction("total_curriculums"))
+	)
+
+
+def get_all_curriculum_quizzes(session, ascending=True):
+	"""Get a list of quizzes and the number of curriculums they belong to
+	Args:
+		session: database session to use
+		ascending: direction to sort the results
+	Returns:
+		List: list of quizzes sorted by number of curriculums they belong to
+	"""
+	if not isinstance(ascending, bool):
+		raise ValueError(f"Sorting value invalid: {ascending}")
+
+	direction = asc if ascending else desc
+
+	# Placeholder; user input will replace this (this decides which curriculum_id to search against)
+	curriculum_search = 6
+
+	record = (
+		session.query(Quiz.title)
+		.join(quiz_curriculum)
+		.filter(quiz_curriculum.c.curriculum_id == curriculum_search)
+	)
+
+	for r in record:
+		print(r[0])
+
+	return
+
+
+def get_all_curriculum_modules(session, ascending=True):
+	"""Get a list of modules and the number of curriculums they belong to
+	Args:
+		session: database session to use
+		ascending: direction to sort the results
+	Returns:
+		List: list of modules sorted by number of curriculums they belong to
+	"""
+	if not isinstance(ascending, bool):
+		raise ValueError(f"Sorting value invalid: {ascending}")
+
+	direction = asc if ascending else desc
+
+	# Placeholder; user input will replace this (this decides which curriculum_id to search against)
+	curriculum_search = 6
+
+	record = (
+		session.query(Module.title)
+		.join(module_curriculum)
+		.filter(module_curriculum.c.curriculum_id == curriculum_search)
+	)
+
+	for r in record:
+		print(r[0])
+
+	return
 
 
 def add_new_trainee(session, first_name, last_name, train_date, position=None):
@@ -124,6 +204,47 @@ def add_new_quiz(session, curriculum_title, quiz_title, quiz_grade, quiz_notes=N
 	session.commit()
 
 
+def add_new_module(session, curriculum_title, module_title, module_grade, module_notes=None):
+	"""Adds a new module to the system"""
+
+	# Check if module exists
+	module = (
+		session.query(Module)
+		.filter(Module.title == module_title)
+		.one_or_none()
+	)
+
+	# Does the module already exist?
+	if module is not None:
+		print("Error. Module exists.")
+
+	# Create the new module if needed
+	if module is None:
+		module = Module(title = module_title, grade = module_grade, notes = module_notes)
+		print("Module successfully added.")
+
+	# Get the curriculum
+	curriculum = (
+		session.query(Curriculum)
+		.filter(Curriculum.curriculum_title == curriculum_title)
+		.one_or_none()
+		)
+
+	# Do we need to create the curriculum?
+	if curriculum is None:
+		curriculum = Curriculum(curriculum_title = curriculum_title)
+		session.add(curriculum)
+
+	print(curriculum.curriculum_id)
+
+	# Initialize the curriculum relationships
+	module.curriculums.append(curriculum)
+	session.add(module)
+
+	# Commit to the database
+	session.commit()
+
+
 def get_trainees(session):
 	"""Get a list of trainee objects sorted by last name"""
 	return session.query(Trainee).order_by(Trainee.last_name).all()
@@ -137,6 +258,11 @@ def get_curriculums(session):
 def get_quizzes(session):
 	"""Get a list of quiz objects sorted by quiz title"""
 	return session.query(Quiz).order_by(Quiz.title).all()
+
+
+def get_modules(session):
+	"""Get a list of module objects sorted by module title"""
+	return session.query(Module).order_by(Module.title).all()
 
 
 def output_trainee_hierarchy(trainees):
@@ -184,26 +310,49 @@ def output_quiz_hierarchy(quizzes):
 	quizzes_tree.show()
 
 
+def output_module_hierarchy(modules):
+	"""
+	Outputs the module information in a hierarchical manner
+	:param module:			the collection of root module objects
+	:return:				None
+	"""
+	modules_tree = Tree()
+	modules_tree.create_node("Modules", "modules")
+	for module in modules:
+		module_id = f"{module.title}"
+		modules_tree.create_node(module_id, module_id, parent="modules")
+	# Output hierarchy module data
+	modules_tree.show()
+
+
 def main():
 	"""Main entry point of the program"""
 
-	# # Connect to the database using SQLAlchemy
-	# with resources.path(
-	# 	"project.data", "database_test.db"
-	# ) as sqlite_filepath:
 	engine = create_engine("sqlite:///database_test.db")
 
 	Session = sessionmaker()
 	Session.configure(bind=engine)
 	session = Session()
 
-	# Get the number of quizzes within each curriculum
-	quizzes_by_curriculum = get_quizzes_by_curriculum(session, ascending=False)
-	for row in quizzes_by_curriculum:
-		print(row)
-	print()
+	# # Get the number of quizzes within each curriculum
+	# quizzes_by_curriculum = get_quizzes_by_curriculum(session, ascending=False)
+	# for row in quizzes_by_curriculum:
+	# 	print(row)
 
-	print("Quizzes to curriculums generated.")
+	# print("Quizzes to curriculums generated.")
+
+	# # Get the number of curriculums that each quiz belongs to
+	# curriculums_by_quiz = get_curriculums_by_quiz(session, ascending=False)
+	# for row in curriculums_by_quiz:
+	# 	print(row)
+
+	# print("Curriculums to quiz generated.")
+
+	curriculums_and_quiz = get_all_curriculum_quizzes(session, ascending=False)
+	print("Curriculum and its quizzes successfully queried.\n")
+
+	curriculums_and_module = get_all_curriculum_modules(session, ascending=False)
+	print("Curriculum and its modules successfully queried.\n")
 
 	# add_new_trainee(
 	# 	session,
@@ -218,14 +367,22 @@ def main():
 	# 	curriculum_title="CSC Level 1 Training",
 	# 	)
 
-	add_new_quiz(
-		session,
-		# curriculum_title won't be string entry, it will have GUI drop-down for user selection
-		curriculum_title="CSC Level 1 Training",
-		quiz_title="Checkpoint 1",
-		quiz_grade="100",
-		quiz_notes="This quiz went really well! You have made excellent progress!"
-		)
+	# add_new_quiz(
+	# 	session,
+	# 	# curriculum_title won't be string entry, it will have GUI drop-down for user selection
+	# 	curriculum_title="CSC Level 2 Training",
+	# 	quiz_title="Bill Pay Quiz 1",
+	# 	quiz_grade="90",
+	# 	quiz_notes="Good job"
+	# 	)
+
+	# add_new_module(
+	# 	session,
+	# 	curriculum_title="CSC Custom Card Training",
+	# 	module_title="Bellshare Form Completion",
+	# 	module_grade="100",
+	# 	module_notes="This module went great. Let me know if you have questions!"
+	# 	)
 
 	# Output hierarchical trainees data
 	trainees = get_trainees(session)
@@ -236,6 +393,9 @@ def main():
 
 	quizzes = get_quizzes(session)
 	output_quiz_hierarchy(quizzes)
+
+	modules = get_modules(session)
+	output_module_hierarchy(modules)
 
 if __name__ == "__main__":
 	main()
