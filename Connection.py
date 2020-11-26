@@ -4,7 +4,8 @@ from sqlalchemy import and_, create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.sql import asc, desc, func
 
-from Database_test import Trainee, Curriculum, Quiz, Module, quiz_curriculum, module_curriculum
+from Database_test import Trainee, Curriculum, Quiz, Module, trainee_curriculum, quiz_curriculum, module_curriculum
+import Update
 
 from treelib import Tree
 
@@ -71,12 +72,12 @@ def get_all_curriculum_quizzes(session, ascending=True):
 	direction = asc if ascending else desc
 
 	# Placeholder; user input will replace this (this decides which curriculum_id to search against)
-	curriculum_search = 6
+	CURRICULUM_SEARCH = 1
 
 	record = (
 		session.query(Quiz.title)
 		.join(quiz_curriculum)
-		.filter(quiz_curriculum.c.curriculum_id == curriculum_search)
+		.filter(quiz_curriculum.c.curriculum_id == CURRICULUM_SEARCH)
 	)
 
 	for r in record:
@@ -99,12 +100,40 @@ def get_all_curriculum_modules(session, ascending=True):
 	direction = asc if ascending else desc
 
 	# Placeholder; user input will replace this (this decides which curriculum_id to search against)
-	curriculum_search = 6
+	CURRICULUM_SEARCH = 1
 
 	record = (
 		session.query(Module.title)
 		.join(module_curriculum)
-		.filter(module_curriculum.c.curriculum_id == curriculum_search)
+		.filter(module_curriculum.c.curriculum_id == CURRICULUM_SEARCH)
+	)
+
+	for r in record:
+		print(r[0])
+
+	return
+
+# NEEDS MORE TESTING; UPDATING TRAINEE -> CURRICULUM FIRST
+def get_all_trainees_curriculums(session, ascending=True):
+	"""Get a list of students, searching by curriculums they are enrolled in
+	Args:
+		session: database session to use
+		ascending: direction to sort the results
+	Returns:
+		List: list of students enrolled, search by 'Curriculum'
+	"""
+	if not isinstance(ascending, bool):
+		raise ValueError(f"Sorting value invalid: {ascending}")
+
+	direction = asc if ascending else desc
+
+	# Placeholder; user input will replace this (this decides which curriculum_id to search against)
+	CURRICULUM_SEARCH = 2
+
+	record = (
+		session.query(Trainee.last_name)
+		.join(trainee_curriculum)
+		.filter(trainee_curriculum.c.curriculum_id == CURRICULUM_SEARCH)
 	)
 
 	for r in record:
@@ -113,7 +142,7 @@ def get_all_curriculum_modules(session, ascending=True):
 	return
 
 
-def add_new_trainee(session, first_name, last_name, train_date, position=None):
+def add_new_trainee(session, curriculum_title, first_name, last_name, train_date, position=None):
 	"""Adds a new trainee to the system"""
 
 	# Check if trainee exists
@@ -133,8 +162,58 @@ def add_new_trainee(session, first_name, last_name, train_date, position=None):
 		trainee = Trainee(first_name=first_name, last_name=last_name, train_date=train_date, position=position)
 		print("Trainee successfully added.")
 
-    # Commit to the database
+	# Get the curriculum
+	curriculum = (
+		session.query(Curriculum)
+		.filter(Curriculum.curriculum_title == curriculum_title)
+		.one_or_none()
+		)
+
+	# Do we need to create the curriculum?
+	if curriculum is None:
+		curriculum = Curriculum(curriculum_title = curriculum_title)
+		session.add(curriculum)
+
+	print(curriculum.curriculum_id)
+
+	# Initialize trainee_curriculum relationship
+	trainee.curriculums.append(curriculum)
 	session.add(trainee)
+
+	# Commit to the database
+	session.commit()
+
+
+def add_trainee_to_curriculum(session, first_name, last_name, curriculum_title):
+	"""Adds trainee to selected curriculum"""
+
+	# Check if last name exists
+	trainee = (
+		session.query(Trainee)
+		.filter(Trainee.first_name == first_name, Trainee.last_name == last_name)
+		.one_or_none()
+	)
+
+	# Print error if trainee not found
+	if trainee is None:
+		print("Error. Trainee not found.")
+		return
+
+	curriculum = (
+		session.query(Curriculum)
+		.filter(Curriculum.curriculum_title == curriculum_title)
+		.one_or_none()
+	)
+
+	# Print error if curriculum not found
+	if curriculum is None:
+		print("Error. Trainee found, but curriculum not correct.")
+		return
+
+	# Initialize the trainee relationships
+	trainee.curriculums.append(curriculum)
+
+	# Commit to the database
 	session.commit()
 
 
@@ -348,54 +427,64 @@ def main():
 
 	# print("Curriculums to quiz generated.")
 
-	curriculums_and_quiz = get_all_curriculum_quizzes(session, ascending=False)
-	print("Curriculum and its quizzes successfully queried.\n")
+	# curriculums_and_quiz = get_all_curriculum_quizzes(session, ascending=False)
+	# print("Curriculum and its quizzes successfully queried.\n")
 
-	curriculums_and_module = get_all_curriculum_modules(session, ascending=False)
-	print("Curriculum and its modules successfully queried.\n")
+	# curriculums_and_module = get_all_curriculum_modules(session, ascending=False)
+	# print("Curriculum and its modules successfully queried.\n")
+
+	# trainees_and_curriculums = get_all_trainees_curriculums(session, ascending=False)
+	# print("is/are enrolled in this curriculum.\n")
 
 	# add_new_trainee(
 	# 	session,
-	# 	first_name="Austin",
-	# 	last_name="Noyes",
+	# 	curriculum_title="CSC Level 2 Training",
+	# 	first_name="Ted",
+	# 	last_name="Gunderson",
 	# 	train_date='010615',
 	# 	position="CSCTrainer",
 	# 	)
 
 	# add_new_curriculum(
 	# 	session,
-	# 	curriculum_title="CSC Level 1 Training",
+	# 	curriculum_title="CSC Senior Refresh Training",
 	# 	)
 
 	# add_new_quiz(
 	# 	session,
 	# 	# curriculum_title won't be string entry, it will have GUI drop-down for user selection
-	# 	curriculum_title="CSC Level 2 Training",
-	# 	quiz_title="Bill Pay Quiz 1",
+	# 	curriculum_title="CSC Level 1 Training",
+	# 	quiz_title="Level Refresh Quiz",
 	# 	quiz_grade="90",
 	# 	quiz_notes="Good job"
 	# 	)
 
 	# add_new_module(
 	# 	session,
-	# 	curriculum_title="CSC Custom Card Training",
-	# 	module_title="Bellshare Form Completion",
+	# 	curriculum_title="CSC Level 2 Refresh Training",
+	# 	module_title="CS Training",
 	# 	module_grade="100",
 	# 	module_notes="This module went great. Let me know if you have questions!"
 	# 	)
 
+	# add_trainee_to_curriculum(
+	# 	session,
+	# 	first_name="Ted",
+	# 	last_name="Gunderson",
+	# 	curriculum_title="CSC Level 2 Training")
+
 	# Output hierarchical trainees data
-	trainees = get_trainees(session)
-	output_trainee_hierarchy(trainees)
+	# trainees = get_trainees(session)
+	# output_trainee_hierarchy(trainees)
 
-	curriculums = get_curriculums(session)
-	output_curriculum_hierarchy(curriculums)
+	# curriculums = get_curriculums(session)
+	# output_curriculum_hierarchy(curriculums)
 
-	quizzes = get_quizzes(session)
-	output_quiz_hierarchy(quizzes)
+	# quizzes = get_quizzes(session)
+	# output_quiz_hierarchy(quizzes)
 
-	modules = get_modules(session)
-	output_module_hierarchy(modules)
+	# modules = get_modules(session)
+	# output_module_hierarchy(modules)
 
 if __name__ == "__main__":
 	main()
